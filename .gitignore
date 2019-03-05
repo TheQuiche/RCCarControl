@@ -1,6 +1,8 @@
 client/build
 client/build.xml
 client/dist
+client/nbproject/private
 server/build
 server/build.xml
 server/dist
+server/nbproject/private
