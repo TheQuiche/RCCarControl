@@ -1,19 +1,19 @@
 package domain;
 
-public enum STEERING_STATE {
-    FULL_LEFT(-1),
-    HALF_LEFT(-0.5),
-    STRAIGHT(0),
-    HALF_RIGHT(0.5),
-    FULL_RIGHT(1);
+enum STEERING_STATE {   // States starting with 1 are for the steering
+    FULL_LEFT("10"),
+    HALF_LEFT("11"),
+    STRAIGHT("12"),
+    HALF_RIGHT("13"),
+    FULL_RIGHT("14");
 
-    private double value;
+    private String value;
 
-    public double getValue() {
+    String getValue() {
         return this.value;
     }
 
-    private STEERING_STATE(double value) {
+    private STEERING_STATE(String value) {
         this.value = value;
     }
 }

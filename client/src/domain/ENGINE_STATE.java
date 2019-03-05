@@ -1,21 +1,21 @@
 package domain;
 
-public enum ENGINE_STATE {
-    FULL_REVERSE(-1),
-    HALF_REVERSE(-0.5),
-    QUARTER_REVERSE(-0.25),
-    COASTING(0),
-    QUARTER_THROTTLE(0.25),
-    HALF_THROTTLE(0.5),
-    FULL_THROTTLE(1);
+enum ENGINE_STATE {     // States starting with 0 are for the engine
+    FULL_REVERSE("00"),
+    HALF_REVERSE("01"),
+    QUARTER_REVERSE("02"),
+    COASTING("03"),
+    QUARTER_THROTTLE("04"),
+    HALF_THROTTLE("05"),
+    FULL_THROTTLE("06");
 
-    private double value;
+    private String value;
 
-    public double getValue() {
+    String getValue() {
         return this.value;
     }
 
-    private ENGINE_STATE(double value) {
+    private ENGINE_STATE(String value) {
         this.value = value;
     }
 }
