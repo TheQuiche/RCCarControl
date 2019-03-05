@@ -7,15 +7,11 @@ import java.util.logging.Logger;
 public class DomainController {
 
   private final ArrayBlockingQueue<String> buffer;
-  private final Thread conn, engine;
 
   public DomainController() {
     buffer = new ArrayBlockingQueue<>(10);
-    conn = new Thread(new ConnectionManager(this));
-    engine = new Thread(new MotorManager(this));
-
-    conn.start();
-    engine.start();
+    new ConnectionManager(this).run();
+    new MotorManager(this).run();
   }
 
   public void set(String value) {
