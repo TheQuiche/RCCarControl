@@ -11,13 +11,13 @@ import java.util.logging.Logger;
 
 class ConnectionManager implements Runnable {
 
-  private final DomeinController dc;
+  private final DomainController dc;
   private DatagramSocket socket = null;
   private final int PORT;
   private final byte[] receivedData;
   private final DatagramPacket receivedPacket;
 
-  ConnectionManager(DomeinController dc) {
+  ConnectionManager(DomainController dc) {
     this.dc = dc;
     PORT = 1234;
     receivedData = new byte[6];

@@ -8,11 +8,11 @@ import java.util.logging.Logger;
 class MotorManager implements Runnable {
 
     private Process process;
-    private final DomeinController dc;
+    private final DomainController dc;
     private String receivedData;
     private double power;
 
-    MotorManager(DomeinController dc) {
+    MotorManager(DomainController dc) {
         this.dc = dc;
     }
 

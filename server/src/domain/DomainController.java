@@ -4,12 +4,12 @@ import java.util.concurrent.ArrayBlockingQueue;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
-public class DomeinController {
+public class DomainController {
 
   private final ArrayBlockingQueue<String> buffer;
   private final Thread conn, engine;
 
-  public DomeinController() {
+  public DomainController() {
     buffer = new ArrayBlockingQueue<>(10);
     conn = new Thread(new ConnectionManager(this));
     engine = new Thread(new MotorManager(this));
@@ -22,7 +22,7 @@ public class DomeinController {
     try {
       buffer.put(value);
     } catch (InterruptedException ex) {
-      Logger.getLogger(DomeinController.class.getName()).log(Level.SEVERE, null, ex);
+      Logger.getLogger(DomainController.class.getName()).log(Level.SEVERE, null, ex);
     }
   }
 
