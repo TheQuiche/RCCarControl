@@ -3,21 +3,19 @@ package domain;
 import java.io.IOException;
 import java.net.DatagramPacket;
 import java.net.DatagramSocket;
-import java.net.InetAddress;
 import java.net.SocketException;
-import java.net.UnknownHostException;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
-class ConnectionManager implements Runnable {
+class ConnectionHandler {
 
   private final DomainController dc;
-  private DatagramSocket socket = null;
+  private DatagramSocket socket;
   private final int PORT;
   private final byte[] receivedData;
   private final DatagramPacket receivedPacket;
 
-  ConnectionManager(DomainController dc) {
+  ConnectionHandler(DomainController dc) {
     this.dc = dc;
     PORT = 1234;
     receivedData = new byte[6];
@@ -26,20 +24,21 @@ class ConnectionManager implements Runnable {
     try {
       socket = new DatagramSocket(PORT);
     } catch (SocketException ex) {
-      Logger.getLogger(ConnectionManager.class.getName()).log(Level.SEVERE, null, ex);
+      Logger.getLogger(ConnectionHandler.class.getName()).log(Level.SEVERE, null, ex);
+      System.out.println("Something went wrong while creating the websocket!");
+      System.exit(1);
     }
   }
 
-  @Override
-  public void run() {
+  void handle() {
     while (true) {
       try {
         socket.receive(receivedPacket);
       } catch (IOException ex) {
-        Logger.getLogger(ConnectionManager.class.getName()).log(Level.SEVERE, null, ex);
+        Logger.getLogger(ConnectionHandler.class.getName()).log(Level.SEVERE, null, ex);
       }
-      
-      dc.set(new String(receivedData));
+
+      dc.updateValue(new String(receivedData));
     }
   }
 }
