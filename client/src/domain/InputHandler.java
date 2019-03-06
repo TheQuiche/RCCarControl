@@ -5,14 +5,14 @@ import static domain.STEERING_STATE.*;
 
 class InputHandler {
 
-    private ConnectionHandler ch;
+    private DomainController dc;
     private ENGINE_STATE prev_engineState, new_engineState;
     private STEERING_STATE prev_steeringState, new_steeringState;
 
-    InputHandler() {
+    InputHandler(DomainController dc) {
+        this.dc = dc;
         prev_engineState = COASTING;
         prev_steeringState = STRAIGHT;
-        ch = new ConnectionHandler();
     }
 
     void handle(String input) {
@@ -20,7 +20,7 @@ class InputHandler {
             case 'S':   // Input is a steering value
                 new_steeringState = convertSteering(Float.parseFloat(input.substring(1))); // Everything after the first char is the input value
                 if (new_steeringState != prev_steeringState) {
-                    ch.handle(new_steeringState.getValue().getBytes()); // Let the ConnectionHandler send the data when it's a changed value
+                    dc.sendData(new_steeringState.getValue().getBytes()); // Let the ConnectionHandler send the data when it's a changed value
 
                     prev_steeringState = new_steeringState;
                 }
@@ -29,7 +29,7 @@ class InputHandler {
             case 'E':   // Input is an engine value
                 new_engineState = convertThrottle(Float.parseFloat(input.substring(1))); // Everything after the first char is the input value
                 if (new_engineState != prev_engineState) {
-                    ch.handle(new_engineState.getValue().getBytes()); // Let the ConnectionHandler send the data when it's a changed value
+                    dc.sendData(new_engineState.getValue().getBytes()); // Let the ConnectionHandler send the data when it's a changed value
 
                     prev_engineState = new_engineState;
                 }

@@ -30,7 +30,7 @@ class ConnectionHandler {
         }
     }
 
-    void handle(byte[] data) {
+    void send(byte[] data) {
         DatagramPacket sendPacket = new DatagramPacket(data, data.length, IPADDRESS, PORT);
 
         try {
