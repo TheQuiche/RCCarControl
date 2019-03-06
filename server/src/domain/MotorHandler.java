@@ -7,7 +7,6 @@ import java.util.logging.Logger;
 
 class MotorHandler {
 
-    private Process process;
     private double power;
 
     MotorHandler() {
@@ -85,7 +84,7 @@ class MotorHandler {
 
     private void setupGPIO() {
         try {
-            process = Runtime.getRuntime().exec("setup_RCCarGPIO.sh");
+            Runtime.getRuntime().exec("setup_RCCarGPIO.sh");
         } catch (IOException ex) {
             Logger.getLogger(MotorHandler.class.getName()).log(Level.SEVERE, null, ex);
         }
@@ -95,25 +94,25 @@ class MotorHandler {
     private void controlMotor(MOTOR_TYPE type, int direction, int power) {
         if (type == ENGINE) {
             try {
-                process = Runtime.getRuntime().exec("gpio -g write 5 " + direction);
+                Runtime.getRuntime().exec("gpio -g write 5 " + direction);
             } catch (IOException ex) {
                 Logger.getLogger(MotorHandler.class.getName()).log(Level.SEVERE, null, ex);
             }
 
             try {
-                process = Runtime.getRuntime().exec("gpio -g pwm 12 " + power);
+                Runtime.getRuntime().exec("gpio -g pwm 12 " + power);
             } catch (IOException ex) {
                 Logger.getLogger(MotorHandler.class.getName()).log(Level.SEVERE, null, ex);
             }
         } else {
             try {
-                process = Runtime.getRuntime().exec("gpio -g write 6 " + direction);
+                Runtime.getRuntime().exec("gpio -g write 6 " + direction);
             } catch (IOException ex) {
                 Logger.getLogger(MotorHandler.class.getName()).log(Level.SEVERE, null, ex);
             }
 
             try {
-                process = Runtime.getRuntime().exec("gpio -g pwm 13 " + power);
+                Runtime.getRuntime().exec("gpio -g pwm 13 " + power);
             } catch (IOException ex) {
                 Logger.getLogger(MotorHandler.class.getName()).log(Level.SEVERE, null, ex);
             }
