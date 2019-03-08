@@ -20,7 +20,7 @@ class InputHandler {
             case 'S':   // Input is a steering value
                 new_steeringState = convertSteering(Float.parseFloat(input.substring(1))); // Everything after the first char is the input value
                 if (new_steeringState != prev_steeringState) {
-                    dc.sendData(new_steeringState.toString().getBytes()); // Let the ConnectionHandler send the data because it's a changed value
+                    dc.sendData(new_steeringState.name().getBytes()); // Let the ConnectionHandler send the data because it's a changed value
 
                     prev_steeringState = new_steeringState;
                 }
@@ -29,7 +29,7 @@ class InputHandler {
             case 'E':   // Input is an engine value
                 new_engineState = convertThrottle(Float.parseFloat(input.substring(1))); // Everything after the first char is the input value
                 if (new_engineState != prev_engineState) {
-                    dc.sendData(new_engineState.toString().getBytes()); // Let the ConnectionHandler send the data because it's a changed value
+                    dc.sendData(new_engineState.name().getBytes()); // Let the ConnectionHandler send the data because it's a changed value
 
                     prev_engineState = new_engineState;
                 }
