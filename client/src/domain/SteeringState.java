@@ -1,9 +1,19 @@
 package domain;
 
 enum SteeringState {
-    FULL_LEFT,
-    HALF_LEFT,
-    STRAIGHT,
-    HALF_RIGHT,
-    FULL_RIGHT
+    FULL_LEFT(-1),
+    HALF_LEFT(-0.5),
+    STRAIGHT(0),
+    HALF_RIGHT(0.5),
+    FULL_RIGHT(1);
+
+    private double value;
+
+    SteeringState(double value) {
+        this.value = value;
+    }
+    
+    double getValue() {
+        return value;
+    }
 }

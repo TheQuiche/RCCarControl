@@ -38,42 +38,48 @@ class InputHandler {
     }
 
     private SteeringState convertSteering(float steeringInputValue) {
-        if (steeringInputValue < -0.5) {
+        if (steeringInputValue < HALF_LEFT.getValue()) {
             return FULL_LEFT;
         }
-        if (steeringInputValue < -0.1) {
+        if (steeringInputValue < STRAIGHT.getValue() - 0.1) { // deadzone [-0.1, 0.1]
             return HALF_LEFT;
-        }                           // deadzone [-0.1, 0.1]
-        if (steeringInputValue < 0.1) {
+        }                           
+        if (steeringInputValue < STRAIGHT.getValue() + 0.1) { // deadzone [-0.1, 0.1]
             return STRAIGHT;
         }
-        if (steeringInputValue < 0.6) {
+        if (steeringInputValue < HALF_RIGHT.getValue()) {
             return HALF_RIGHT;
-        } else {
+        }
+        if (steeringInputValue < FULL_RIGHT.getValue()) {
             return FULL_RIGHT;
         }
+        
+        return STRAIGHT;    // In case something went wrong we'll just pick straight
     }
 
     private EngineState convertThrottle(float engineInputValue) {
-        if (engineInputValue < -0.6) {
+        if (engineInputValue < HALF_REVERSE.getValue()) {
             return FULL_REVERSE;
         }
-        if (engineInputValue < -0.3) {
+        if (engineInputValue < QUARTER_REVERSE.getValue()) {
             return HALF_REVERSE;
         }
-        if (engineInputValue < 0) {
+        if (engineInputValue < IDLE.getValue() - 0.1) { // deadzone [-0.1, 0.1]
             return QUARTER_REVERSE;
         }
-        if (engineInputValue == 0) {
+        if (engineInputValue < IDLE.getValue() + 0.1) { // deadzone [-0.1, 0.1]
             return IDLE;
         }
-        if (engineInputValue < 0.3) {
+        if (engineInputValue < QUARTER_FORWARD.getValue()) {
             return QUARTER_FORWARD;
         }
-        if (engineInputValue < 0.6) {
+        if (engineInputValue < HALF_FORWARD.getValue()) {
             return HALF_FORWARD;
-        } else {
+        }
+        if (engineInputValue < FULL_FORWARD.getValue()) {
             return FULL_FORWARD;
         }
+        
+        return IDLE;    // In case something went wrong we'll just pick idle
     }
 }
