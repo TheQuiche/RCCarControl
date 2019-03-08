@@ -68,12 +68,12 @@ class InputHandler {
             return IDLE;
         }
         if (engineInputValue < 0.3) {
-            return QUARTER_THROTTLE;
+            return QUARTER_FORWARD;
         }
         if (engineInputValue < 0.6) {
-            return HALF_THROTTLE;
+            return HALF_FORWARD;
         } else {
-            return FULL_THROTTLE;
+            return FULL_FORWARD;
         }
     }
 }
