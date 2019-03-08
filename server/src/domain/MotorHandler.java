@@ -1,85 +1,71 @@
 package domain;
 
-import static domain.MOTOR_TYPE.*;
+import static domain.MotorType.*;
+import static domain.SteeringState.*;
+import static domain.EngineState.*;
 import java.io.IOException;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
 class MotorHandler {
 
-    private double power;
-
     MotorHandler() {
         setupGPIO();
     }
 
     void handle(String data) {
-        power = Double.parseDouble(data.substring(1));
+        switch (data) {
+            // Steering states
+            case "FULL_LEFT":
+                handleOutput(STEERING, 1, FULL_LEFT.getValue());
+                break;
 
-        if (data.charAt(0) == 'E') {
-            switch ((int) (power * 100)) { // * 100 due to only int's being possible to switch (0.25 * 100 = 25)
-                case -100:
-                    System.out.println("Full brake!");
-                    controlMotor(ENGINE, 1, 480);
-                    break;
+            case "HALF_LEFT":
+                handleOutput(STEERING, 1, HALF_LEFT.getValue());
+                break;
 
-                case -50:
-                    controlMotor(ENGINE, 1, 300);
-                    System.out.println("Half brake!");
-                    break;
+            case "STRAIGHT":
+                handleOutput(STEERING, 0, STRAIGHT.getValue());
+                break;
 
-                case -25:
-                    controlMotor(ENGINE, 1, 150);
-                    System.out.println("Quarter brake!");
-                    break;
+            case "HALF_RIGHT":
+                handleOutput(STEERING, 0, HALF_RIGHT.getValue());
+                break;
 
-                case 0:
-                    controlMotor(ENGINE, 0, 0);
-                    System.out.println("Coasting!");
-                    break;
+            case "FULL_RIGHT":
+                handleOutput(STEERING, 0, FULL_RIGHT.getValue());
+                break;
 
-                case 25:
-                    controlMotor(ENGINE, 0, 150);
-                    System.out.println("Quarter throttle!");
-                    break;
+            // Engine states
+            case "FULL_REVERSE":
+                handleOutput(ENGINE, 1, FULL_REVERSE.getValue());
+                break;
 
-                case 50:
-                    controlMotor(ENGINE, 0, 300);
-                    System.out.println("Half throttle!");
-                    break;
+            case "HALF_REVERSE":
+                handleOutput(ENGINE, 1, HALF_REVERSE.getValue());
+                break;
 
-                case 100:
-                    controlMotor(ENGINE, 0, 480);
-                    System.out.println("Full throttle!");
-            }
+            case "QUARTER_REVERSE":
+                handleOutput(ENGINE, 1, QUARTER_REVERSE.getValue());
+                break;
 
-        } else {
-            switch ((int) (power * 10)) { // * 10 due to only int's being possible to switch (0.5 * 10 = 5)
-                case -10:
-                    System.out.println("Full left!");
-                    controlMotor(STEERING, 1, 480);
-                    break;
+            case "IDLE":
+                handleOutput(ENGINE, 0, IDLE.getValue());
+                break;
 
-                case -5:
-                    controlMotor(STEERING, 1, 200);
-                    System.out.println("Half left!");
-                    break;
+            case "QUARTER_FORWARD":
+                handleOutput(ENGINE, 0, QUARTER_FORWARD.getValue());
+                break;
 
-                case 0:
-                    controlMotor(STEERING, 0, 0);
-                    System.out.println("Straight!");
-                    break;
+            case "HALF_FORWARD":
+                handleOutput(ENGINE, 0, HALF_FORWARD.getValue());
+                break;
 
-                case 5:
-                    controlMotor(STEERING, 0, 200);
-                    System.out.println("Half right!");
-                    break;
-
-                case 10:
-                    controlMotor(STEERING, 0, 480);
-                    System.out.println("Full right!");
-            }
+            case "FULL_FORWARD":
+                handleOutput(ENGINE, 0, FULL_FORWARD.getValue());
         }
+
+        System.out.println(data);
     }
 
     private void setupGPIO() {
@@ -88,34 +74,16 @@ class MotorHandler {
         } catch (IOException ex) {
             Logger.getLogger(MotorHandler.class.getName()).log(Level.SEVERE, null, ex);
         }
+
         System.out.println("GPIO setup!");
     }
 
-    private void controlMotor(MOTOR_TYPE type, int direction, int power) {
-        if (type == ENGINE) {
-            try {
-                Runtime.getRuntime().exec("gpio -g write 5 " + direction);
-            } catch (IOException ex) {
-                Logger.getLogger(MotorHandler.class.getName()).log(Level.SEVERE, null, ex);
-            }
-
-            try {
-                Runtime.getRuntime().exec("gpio -g pwm 12 " + power);
-            } catch (IOException ex) {
-                Logger.getLogger(MotorHandler.class.getName()).log(Level.SEVERE, null, ex);
-            }
-        } else {
-            try {
-                Runtime.getRuntime().exec("gpio -g write 6 " + direction);
-            } catch (IOException ex) {
-                Logger.getLogger(MotorHandler.class.getName()).log(Level.SEVERE, null, ex);
-            }
-
-            try {
-                Runtime.getRuntime().exec("gpio -g pwm 13 " + power);
-            } catch (IOException ex) {
-                Logger.getLogger(MotorHandler.class.getName()).log(Level.SEVERE, null, ex);
-            }
+    private void handleOutput(MotorType motorType, int direction, int power) {
+        try {
+            Runtime.getRuntime().exec(String.format("gpio -g write %d %d", motorType.getDirPin(), direction));
+            Runtime.getRuntime().exec(String.format("gpio -g pwm %d %d" + motorType.getPowerPin(), power));
+        } catch (IOException ex) {
+            Logger.getLogger(MotorHandler.class.getName()).log(Level.SEVERE, null, ex);
         }
     }
 }
