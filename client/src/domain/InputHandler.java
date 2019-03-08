@@ -1,17 +1,17 @@
 package domain;
 
-import static domain.ENGINE_STATE.*;
-import static domain.STEERING_STATE.*;
+import static domain.EngineState.*;
+import static domain.SteeringState.*;
 
 class InputHandler {
 
     private DomainController dc;
-    private ENGINE_STATE prev_engineState, new_engineState;
-    private STEERING_STATE prev_steeringState, new_steeringState;
+    private EngineState prev_engineState, new_engineState;
+    private SteeringState prev_steeringState, new_steeringState;
 
     InputHandler(DomainController dc) {
         this.dc = dc;
-        prev_engineState = COASTING;
+        prev_engineState = IDLE;
         prev_steeringState = STRAIGHT;
     }
 
@@ -20,7 +20,7 @@ class InputHandler {
             case 'S':   // Input is a steering value
                 new_steeringState = convertSteering(Float.parseFloat(input.substring(1))); // Everything after the first char is the input value
                 if (new_steeringState != prev_steeringState) {
-                    dc.sendData(new_steeringState.getValue().getBytes()); // Let the ConnectionHandler send the data when it's a changed value
+                    dc.sendData(new_steeringState.toString().getBytes()); // Let the ConnectionHandler send the data because it's a changed value
 
                     prev_steeringState = new_steeringState;
                 }
@@ -29,7 +29,7 @@ class InputHandler {
             case 'E':   // Input is an engine value
                 new_engineState = convertThrottle(Float.parseFloat(input.substring(1))); // Everything after the first char is the input value
                 if (new_engineState != prev_engineState) {
-                    dc.sendData(new_engineState.getValue().getBytes()); // Let the ConnectionHandler send the data when it's a changed value
+                    dc.sendData(new_engineState.toString().getBytes()); // Let the ConnectionHandler send the data because it's a changed value
 
                     prev_engineState = new_engineState;
                 }
@@ -37,7 +37,7 @@ class InputHandler {
         }
     }
 
-    private static STEERING_STATE convertSteering(float steeringInputValue) {
+    private SteeringState convertSteering(float steeringInputValue) {
         if (steeringInputValue < -0.5) {
             return FULL_LEFT;
         }
@@ -54,7 +54,7 @@ class InputHandler {
         }
     }
 
-    private static ENGINE_STATE convertThrottle(float engineInputValue) {
+    private EngineState convertThrottle(float engineInputValue) {
         if (engineInputValue < -0.6) {
             return FULL_REVERSE;
         }
@@ -65,7 +65,7 @@ class InputHandler {
             return QUARTER_REVERSE;
         }
         if (engineInputValue == 0) {
-            return COASTING;
+            return IDLE;
         }
         if (engineInputValue < 0.3) {
             return QUARTER_THROTTLE;

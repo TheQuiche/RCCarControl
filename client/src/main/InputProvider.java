@@ -32,8 +32,8 @@ class InputProvider {
             }
 
             // Send the current input values to the DomainController
-            dc.updateCurrentSteeringValue((float) (Math.round(state.leftStickX * 10.0) / 10.0)); // A rounded float * 10 has 0 decimals, deviding this by 10 gives us one decimal
-            dc.updateCurrentEngineValue((float) (Math.round(interpretTriggers(state.leftTrigger, state.rightTrigger) * 10.0) / 10.0)); // ^^
+            dc.updateCurrentSteeringValue(state.leftStickX);
+            dc.updateCurrentEngineValue(interpretTriggers(state.leftTrigger, state.rightTrigger));
         }
     }
 
