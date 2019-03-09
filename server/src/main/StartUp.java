@@ -5,7 +5,7 @@ import domain.DomainController;
 public class StartUp {
 
   public static void main(String[] args) {
-    new DomainController();
+    new DomainController().run();
   }
     
 }
