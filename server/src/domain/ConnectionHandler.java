@@ -18,7 +18,7 @@ class ConnectionHandler {
   ConnectionHandler(DomainController dc) {
     this.dc = dc;
     PORT = 1234;
-    receivedData = new byte[6];
+    receivedData = new byte[15];
     receivedPacket = new DatagramPacket(receivedData, receivedData.length);
 
     try {
