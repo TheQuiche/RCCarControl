@@ -50,7 +50,7 @@ class InputHandler {
         if (steeringInputValue < HALF_RIGHT.getValue()) {
             return HALF_RIGHT;
         }
-        if (steeringInputValue < FULL_RIGHT.getValue()) {
+        if (steeringInputValue <= FULL_RIGHT.getValue()) {
             return FULL_RIGHT;
         }
         
@@ -76,7 +76,7 @@ class InputHandler {
         if (engineInputValue < HALF_FORWARD.getValue()) {
             return HALF_FORWARD;
         }
-        if (engineInputValue < FULL_FORWARD.getValue()) {
+        if (engineInputValue <= FULL_FORWARD.getValue()) {
             return FULL_FORWARD;
         }
         
