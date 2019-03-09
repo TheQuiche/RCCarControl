@@ -31,6 +31,7 @@ class ConnectionHandler {
     }
 
     void send(byte[] data) {
+        System.out.println("sending " + new String(data));
         DatagramPacket sendPacket = new DatagramPacket(data, data.length, IPADDRESS, PORT);
 
         try {
