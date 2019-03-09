@@ -64,8 +64,6 @@ class MotorHandler {
             case "FULL_FORWARD":
                 handleOutput(ENGINE, 0, FULL_FORWARD.getValue());
         }
-
-        System.out.println("received " + data);
     }
 
     private void setupGPIO() {

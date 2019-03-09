@@ -4,7 +4,6 @@ import java.io.IOException;
 import java.net.DatagramPacket;
 import java.net.DatagramSocket;
 import java.net.SocketException;
-import java.util.Arrays;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
@@ -13,7 +12,7 @@ class ConnectionHandler {
   private final DomainController dc;
   private DatagramSocket socket;
   private final int PORT;
-  private final byte[] receivedData;
+  private byte[] receivedData;
   private final DatagramPacket receivedPacket;
 
   ConnectionHandler(DomainController dc) {
@@ -34,13 +33,13 @@ class ConnectionHandler {
   void handle() {
     while (true) {
       try {
-          Arrays.fill(null, receivedData); // Empty the array
-        socket.receive(receivedPacket); // Wait for input to fill it
+        socket.receive(receivedPacket); // Wait for input to fill the array
       } catch (IOException ex) {
         Logger.getLogger(ConnectionHandler.class.getName()).log(Level.SEVERE, null, ex);
       }
 
-      dc.updateValue(new String(receivedData));
+      dc.updateValue(new String(receivedPacket.getData(), receivedPacket.getOffset(), receivedPacket.getLength())); // Only use the new received bytes
+      System.out.println("received " + new String(receivedPacket.getData(), receivedPacket.getOffset(), receivedPacket.getLength()));
     }
   }
 }
