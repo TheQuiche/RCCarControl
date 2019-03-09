@@ -21,7 +21,7 @@ class InputHandler {
                 new_steeringState = convertSteering(Float.parseFloat(input.substring(1))); // Everything after the first char is the input value
                 if (new_steeringState != prev_steeringState) {
                     dc.sendData(new_steeringState.name().getBytes()); // Let the ConnectionHandler send the data because it's a changed value
-                    System.out.println("sending" + new_steeringState.name());
+                    System.out.println("sending " + new_steeringState.name());
                     
                     prev_steeringState = new_steeringState;
                 }

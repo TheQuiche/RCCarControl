@@ -4,6 +4,7 @@ import java.io.IOException;
 import java.net.DatagramPacket;
 import java.net.DatagramSocket;
 import java.net.SocketException;
+import java.util.Arrays;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
@@ -33,7 +34,8 @@ class ConnectionHandler {
   void handle() {
     while (true) {
       try {
-        socket.receive(receivedPacket);
+          Arrays.fill(null, receivedData); // Empty the array
+        socket.receive(receivedPacket); // Wait for input to fill it
       } catch (IOException ex) {
         Logger.getLogger(ConnectionHandler.class.getName()).log(Level.SEVERE, null, ex);
       }

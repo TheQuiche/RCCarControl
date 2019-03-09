@@ -65,7 +65,7 @@ class MotorHandler {
                 handleOutput(ENGINE, 0, FULL_FORWARD.getValue());
         }
 
-        System.out.println(data);
+        System.out.println("received " + data);
     }
 
     private void setupGPIO() {
@@ -81,7 +81,7 @@ class MotorHandler {
     private void handleOutput(MotorType motorType, int direction, int power) {
         try {
             Runtime.getRuntime().exec(String.format("gpio -g write %d %d", motorType.getDirPin(), direction));
-            Runtime.getRuntime().exec(String.format("gpio -g pwm %d %d" + motorType.getPowerPin(), power));
+            Runtime.getRuntime().exec(String.format("gpio -g pwm %d %d", motorType.getPowerPin(), power));
         } catch (IOException ex) {
             Logger.getLogger(MotorHandler.class.getName()).log(Level.SEVERE, null, ex);
         }
