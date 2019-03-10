@@ -11,6 +11,10 @@ public class DomainController {
     }
 
     // Methods for InputProvider
+    public boolean setServerIP(String IP) {
+        return ch.setServerIP(IP);
+    }
+    
     public void updateCurrentSteeringValue(float steeringInputValue) {
         ih.handle("S" + steeringInputValue);    // Let the InputHandler do it's thing with the value
     }

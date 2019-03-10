@@ -18,15 +18,19 @@ class ConnectionHandler {
 
     ConnectionHandler() {
         try {
-            IPADDRESS = InetAddress.getByName("192.168.0.20");
-        } catch (UnknownHostException ex) {
-            Logger.getLogger(ConnectionHandler.class.getName()).log(Level.SEVERE, null, ex);
-        }
-
-        try {
             socket = new DatagramSocket(PORT);
         } catch (SocketException ex) {
             Logger.getLogger(StartUp.class.getName()).log(Level.SEVERE, null, ex);
+        }
+    }
+
+    boolean setServerIP(String serverIP) {
+        try {
+            IPADDRESS = InetAddress.getByName(serverIP);
+            return true;    // Return true if the IP is valid
+        } catch (UnknownHostException ex) {
+            Logger.getLogger(ConnectionHandler.class.getName()).log(Level.SEVERE, null, ex);
+            return false;   // Return false if the IP is invalid
         }
     }
 

@@ -3,6 +3,7 @@ package main;
 import com.studiohartman.jamepad.ControllerManager;
 import com.studiohartman.jamepad.ControllerState;
 import domain.DomainController;
+import java.util.Scanner;
 
 class InputProvider {
 
@@ -10,9 +11,11 @@ class InputProvider {
     private static final ControllerManager CONTROLLERS = new ControllerManager();
     private ControllerState state;
     private final DomainController dc;
+    private final Scanner input;
 
     InputProvider() {
         dc = new DomainController();
+        input = new Scanner(System.in);
         CONTROLLERS.initSDLGamepad();
         state = CONTROLLERS.getState(0);
     }
@@ -22,6 +25,17 @@ class InputProvider {
             System.out.println("No controller found, connect a controller and restart this application.");
             System.exit(1);
         }
+
+        System.out.print("Enter the RC Car IP address: ");
+
+        while (!dc.setServerIP(input.nextLine())) {
+            System.out.println("The entered IP address is invalid!");   // This test is very basic and should get updated...
+            System.out.println();
+            System.out.print("Enter the RC Car server IP address: ");
+        }
+        
+        System.out.println("Ready to send data!");
+        System.out.println();
 
         while (!end) {
             state = CONTROLLERS.getState(0); // Get current controller state
