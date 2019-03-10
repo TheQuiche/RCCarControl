@@ -4,8 +4,6 @@ import static domain.MotorType.*;
 import static domain.SteeringState.*;
 import static domain.EngineState.*;
 import java.io.IOException;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 
 class MotorHandler {
 
@@ -69,19 +67,21 @@ class MotorHandler {
     private void setupGPIO() {
         try {
             Runtime.getRuntime().exec("setup_RCCarGPIO.sh");
-        } catch (IOException ex) {
-            Logger.getLogger(MotorHandler.class.getName()).log(Level.SEVERE, null, ex);
-        }
+            System.out.println("GPIO setup!");
 
-        System.out.println("GPIO setup!");
+        } catch (IOException ex) {
+            System.out.println("Something went wrong while running the GPIO setup!");
+            System.exit(1);
+        }
     }
 
     private void handleOutput(MotorType motorType, int direction, int power) {
         try {
             Runtime.getRuntime().exec(String.format("gpio -g write %d %d", motorType.getDirPin(), direction));
             Runtime.getRuntime().exec(String.format("gpio -g pwm %d %d", motorType.getPowerPin(), power));
+            
         } catch (IOException ex) {
-            Logger.getLogger(MotorHandler.class.getName()).log(Level.SEVERE, null, ex);
+            System.out.println("Something went wrong while changing the GPIO values!");
         }
     }
 }

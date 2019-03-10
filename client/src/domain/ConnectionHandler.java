@@ -6,9 +6,6 @@ import java.net.DatagramSocket;
 import java.net.InetAddress;
 import java.net.SocketException;
 import java.net.UnknownHostException;
-import java.util.logging.Level;
-import java.util.logging.Logger;
-import main.StartUp;
 
 class ConnectionHandler {
 
@@ -19,8 +16,10 @@ class ConnectionHandler {
     ConnectionHandler() {
         try {
             socket = new DatagramSocket(PORT);
+            
         } catch (SocketException ex) {
-            Logger.getLogger(StartUp.class.getName()).log(Level.SEVERE, null, ex);
+            System.out.println("Something went wrong while creating the DatagramSocket!");
+            System.exit(1);
         }
     }
 
@@ -28,8 +27,9 @@ class ConnectionHandler {
         try {
             IPADDRESS = InetAddress.getByName(serverIP);
             return true;    // Return true if the IP is valid
+            
         } catch (UnknownHostException ex) {
-            Logger.getLogger(ConnectionHandler.class.getName()).log(Level.SEVERE, null, ex);
+            System.out.println("Something went wrong while creating the InetAddress!");
             return false;   // Return false if the IP is invalid
         }
     }
@@ -40,8 +40,9 @@ class ConnectionHandler {
 
         try {
             socket.send(sendPacket);
+            
         } catch (IOException ex) {
-            Logger.getLogger(ConnectionHandler.class.getName()).log(Level.SEVERE, null, ex);
+            System.out.println("Something went wrong while sending the data!");
         }
     }
 }

@@ -2,8 +2,8 @@ package domain;
 
 public class DomainController {
 
-    private ConnectionHandler ch;
-    private MotorHandler mh;
+    private final ConnectionHandler ch;
+    private final MotorHandler mh;
     
     public DomainController() {
         mh = new MotorHandler();

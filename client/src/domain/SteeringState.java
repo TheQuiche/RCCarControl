@@ -7,7 +7,7 @@ enum SteeringState {
     HALF_RIGHT(0.5),
     FULL_RIGHT(1);
 
-    private double value;
+    private final double value;
 
     SteeringState(double value) {
         this.value = value;
