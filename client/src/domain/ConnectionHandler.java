@@ -29,7 +29,6 @@ class ConnectionHandler {
             return true;    // Return true if the IP is valid
             
         } catch (UnknownHostException ex) {
-            System.out.println("Something went wrong while creating the InetAddress!");
             return false;   // Return false if the IP is invalid
         }
     }
@@ -42,7 +41,7 @@ class ConnectionHandler {
             socket.send(sendPacket);
             
         } catch (IOException ex) {
-            System.out.println("Something went wrong while sending the data!");
+            System.out.println("Something went wrong while sending the data (check the entered IP-address!)!");
         }
     }
 }
