@@ -51,7 +51,7 @@ class InputProvider {
         System.out.println("  2 - Keyboard");
         System.out.println("  99 - Exit the program");
         System.out.println("");
-        System.out.println("Enter your choice here: ");
+        System.out.print("Enter your choice here: ");
 
         try {
             userInput = input.nextInt();
@@ -68,7 +68,7 @@ class InputProvider {
             System.out.println("  2 - Keyboard");
             System.out.println("  99 - Exit the program");
             System.out.println("");
-            System.out.println("Enter your choice here: ");
+            System.out.print("Enter your choice here: ");
 
             try {
                 userInput = input.nextInt();
@@ -88,7 +88,7 @@ class InputProvider {
             System.out.print("Enter the RC Car server IP address: ");
         }
 
-        System.out.println("Ready to send data!");
+        System.out.println("Succesfully connected to the server!");
         System.out.println();
     }
 
@@ -102,6 +102,7 @@ class InputProvider {
         System.out.println("  LT (Left Trigger):    Reverse/Brake");
         System.out.println("  RT (Right Trigger):   Accelerate");
         System.out.println("  LS (Left Joystick):   Steer left/right");
+        System.out.println("  START:                Exit the program");
         System.out.println("");
         System.out.println("The program is ready to receive your input!");
         System.out.println("");
@@ -110,7 +111,7 @@ class InputProvider {
             state = CONTROLLERS.getState(0); // Get current controller state
 
             if (state.start) { // Exit the program when the start button is pressed
-                System.out.println("Start button pressed, exitting now...");
+                System.out.println("Start button pressed, exiting now...");
                 end = true;
             }
 
@@ -127,6 +128,7 @@ class InputProvider {
         System.out.println("  A:        Steer left");
         System.out.println("  D:        Steer right");
         System.out.println("  Shift:    Full engine speed (forward & backward)");
+        System.out.println("  Esc:      Exit the program");
         System.out.println("");
         System.out.println("The program is NOT ready to receive your input!");
         System.out.println("");

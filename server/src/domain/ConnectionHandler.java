@@ -21,23 +21,41 @@ class ConnectionHandler {
 
         try {
             socket = new DatagramSocket(PORT);
-            
+
         } catch (SocketException ex) {
-            System.out.println("Something went wrong while creating the websocket!");
+            System.out.println("Something went wrong while creating the DatagramSocket!");
             System.exit(1);
         }
     }
 
     void handle() {
+        String receivedDataString;
+        System.out.println("Waiting for a client to connect...");
+        
         while (true) {
             try {
                 socket.receive(receivedPacket); // Wait for input to fill the array
-                dc.updateValue(new String(receivedPacket.getData(), receivedPacket.getOffset(), receivedPacket.getLength())); // Only use the new received bytes
-                System.out.println("received " + new String(receivedPacket.getData(), receivedPacket.getOffset(), receivedPacket.getLength()));
-                
+                receivedDataString = new String(receivedPacket.getData(), receivedPacket.getOffset(), receivedPacket.getLength()); // Only use the new received bytes
+
+                if (receivedDataString.equals("REQUEST")) {
+                    System.out.println("New client is connected!");
+                    sendACK();
+                } else {
+                    dc.updateValue(receivedDataString);
+                    System.out.printf("Received: '%s'%n", receivedDataString);
+                }
+
             } catch (IOException ex) {
                 System.out.println("Something went wrong while receiving a packet!");
             }
+        }
+    }
+
+    private void sendACK() {
+        try {
+            socket.send(new DatagramPacket("ACK".getBytes(), 3, receivedPacket.getAddress(), PORT)); // Send ACK to the client that sent the REQUEST packet
+        } catch (IOException ex) {
+            System.out.println("Something went wrong while sending an acknowledgement to the client!");
         }
     }
 }
