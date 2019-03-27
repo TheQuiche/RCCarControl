@@ -39,7 +39,7 @@ class EngineHandler extends Thread {
     public void run() {
         while (true) {
             newState = EngineState.getByName(dc.get(ENGINE));   // Get the updated engine state from the ABQ
-            
+
             if (checkAllowedSkip()) {
                 continue;   // currentState updated, no need to loop through the next if's
             }
@@ -54,7 +54,6 @@ class EngineHandler extends Thread {
 
             handleOutput(currentState = newState);  // When we have a change that isn't special
             prevChangeTimestamp = new Timestamp(System.currentTimeMillis()).getTime();  // Update the previous change timestamp
-
         }
     }
 
@@ -88,8 +87,6 @@ class EngineHandler extends Thread {
         if (Math.abs(currentState.getValue() - newState.getValue()) > 1) {  // If the absolute value of the subtraction is larger than 1, you skipped a throttle position (see EngineState enum values)
             isChangingThrottle = true;  // We will now start slowly changing the throttle
 
-            System.out.printf("Slowly going from '%s' to '%s'%n", currentState.name(), newState.name());
-
             while (currentState != newState) { // As long as we aren't where the user wants it, slowly increase/decrease the throtlle
                 if (currentState.getValue() < newState.getValue()) {   // We now know we are accelerating
                     handleOutput(currentState = EngineState.getByValue(currentState.getValue() + 1));
@@ -118,7 +115,7 @@ class EngineHandler extends Thread {
     private boolean checkFastChange() {
         currentTimestamp = new Timestamp(System.currentTimeMillis()).getTime();
 
-        if (currentTimestamp + SLEEPBETWEENTHROTTLECHANGES < prevChangeTimestamp) { // true when the last change was less than 1.5 seconds ago
+        if (prevChangeTimestamp + SLEEPBETWEENTHROTTLECHANGES > currentTimestamp) { // true when the last change was less than 1.5 seconds ago
             isChangingThrottle = true;
 
             while (currentTimestamp > prevChangeTimestamp + SLEEPBETWEENTHROTTLECHANGES) {
