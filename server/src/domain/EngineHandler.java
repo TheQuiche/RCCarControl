@@ -11,6 +11,7 @@ class EngineHandler implements Runnable {
     private boolean isChangingThrottle = false; // This is set to true if you quickly floor the throttle (the program will then slowly accelerate, this is needed for not powerfull engines)
     private EngineState currentState, newState = IDLE;
     private long prevChangeTimestamp = new Timestamp(System.currentTimeMillis()).getTime(), currentTimestamp;  // Used to detect fast throttle changes
+    private final static long SLEEPBETWEENTHROTTLECHANGES = 1500; // This is needed for weak engines that can't handle quick throttle changes
 
     EngineHandler(DomainController dc) {
         this.dc = dc;
@@ -98,7 +99,7 @@ class EngineHandler implements Runnable {
                 }
 
                 try {
-                    Thread.sleep(1500);
+                    Thread.sleep(SLEEPBETWEENTHROTTLECHANGES);
 
                 } catch (InterruptedException ex) { // This happens when the user gives other engine input while we are slowly changing it
                     dc.clearEngineBuffer(); // We have to clear the engineBuffer so the next value will be the newly inserted user input
@@ -115,10 +116,10 @@ class EngineHandler implements Runnable {
     private boolean checkFastChange() {
         currentTimestamp = new Timestamp(System.currentTimeMillis()).getTime();
 
-        if (currentTimestamp + 1500 < prevChangeTimestamp) { // true when the last change was less than 1.5 seconds ago
+        if (currentTimestamp + SLEEPBETWEENTHROTTLECHANGES < prevChangeTimestamp) { // true when the last change was less than 1.5 seconds ago
             isChangingThrottle = true;
 
-            while (currentTimestamp > prevChangeTimestamp + 1500) {
+            while (currentTimestamp > prevChangeTimestamp + SLEEPBETWEENTHROTTLECHANGES) {
                 try {
                     Thread.sleep(100);
                 } catch (InterruptedException ex) { // This happens when the user gives other engine input while we are waiting to change it
