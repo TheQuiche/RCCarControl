@@ -1,19 +1,47 @@
 package domain;
 
 enum SteeringState {
-    FULL_LEFT(480),
-    HALF_LEFT(200),
-    STRAIGHT(0),
-    HALF_RIGHT(200),
-    FULL_RIGHT(480);
+    FULL_LEFT(1, 480),
+    HALF_LEFT(1, 200),
+    STRAIGHT(0, 0),
+    HALF_RIGHT(0, 200),
+    FULL_RIGHT(0, 480);
 
-    private final int value;
+    private final int direction, power;
 
-    SteeringState(int value) {
-        this.value = value;
+    SteeringState(int direction, int power) {
+        this.direction = direction;
+        this.power = power;
     }
 
-    int getValue() {
-        return value;
+    int getDirection() {
+        return direction;
+    }
+
+    int getPower() {
+        return power;
+    }
+
+    static SteeringState getByName(String name) {
+        switch (name) {
+            case "FULL_LEFT":
+                return FULL_LEFT;
+
+            case "HALF_LEFT":
+                return HALF_LEFT;
+
+            case "STRAIGHT":
+                return STRAIGHT;
+
+            case "HALF_RIGHT":
+                return HALF_RIGHT;
+
+            case "FULL_RIGHT":
+                return FULL_RIGHT;
+
+            default:
+                System.out.println("We received a wierd value in getByValue (EngineState)");
+                return null;
+        }
     }
 }

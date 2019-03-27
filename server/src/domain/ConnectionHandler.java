@@ -1,11 +1,12 @@
 package domain;
 
+import static domain.MotorType.*;
 import java.io.IOException;
 import java.net.DatagramPacket;
 import java.net.DatagramSocket;
 import java.net.SocketException;
 
-class ConnectionHandler {
+class ConnectionHandler implements Runnable {
 
     private final DomainController dc;
     private DatagramSocket socket;
@@ -28,10 +29,11 @@ class ConnectionHandler {
         }
     }
 
-    void handle() {
+    @Override
+    public void run() {
         String receivedDataString;
         System.out.println("Waiting for a client to connect...");
-        
+
         while (true) {
             try {
                 socket.receive(receivedPacket); // Wait for input to fill the array
@@ -40,13 +42,31 @@ class ConnectionHandler {
                 if (receivedDataString.equals("REQUEST")) {
                     System.out.println("New client is connected!");
                     sendACK();
+
                 } else {
-                    dc.updateValue(receivedDataString);
                     System.out.printf("Received: '%s'%n", receivedDataString);
+
+                    if (receivedDataString.endsWith("_REVERSE") || receivedDataString.equals("IDLE") || receivedDataString.endsWith("_FORWARD")) { // Check if the input is for the EngineHandler
+                        if (dc.isChangingThrottle()) {
+                            dc.interruptEngineHandlerThread(); // If we interrupt the slowly throttle changing thread, it will pick the next value from the buffer
+                        }
+                        Thread.sleep(25);   // Needed to be sure the buffer is cleared
+                        dc.set(ENGINE, receivedDataString);
+                        continue; // skip next if
+                    }
+
+                    if (receivedDataString.endsWith("_LEFT") || receivedDataString.equals("STRAIGHT") || receivedDataString.endsWith("_RIGHT")) { // Check if the input is for SteeringHandler
+                        dc.set(STEERING, receivedDataString); // Error lies behind this
+                        continue; // skip next if's if i would add any
+                    }
+
+                    System.out.println("We received a wierd packet!");
                 }
 
             } catch (IOException ex) {
                 System.out.println("Something went wrong while receiving a packet!");
+            } catch (InterruptedException ex) {
+                System.out.println("Error occured in ConnectionHandler -> run");
             }
         }
     }
