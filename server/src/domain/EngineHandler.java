@@ -8,12 +8,14 @@ import java.sql.Timestamp;
 class EngineHandler extends Thread {
 
     private final DomainController dc;
-    private boolean isChangingThrottle = false; // This is set to true if you quickly floor the throttle (the program will then slowly accelerate, this is needed for not powerfull engines)
-    private EngineState currentState, newState = IDLE;
+    private boolean isChangingThrottle; // This is set to true if you quickly floor the throttle (the program will then slowly accelerate, this is needed for not powerfull engines)
+    private EngineState currentState, newState;
     private long prevChangeTimestamp = new Timestamp(System.currentTimeMillis()).getTime(), currentTimestamp;  // Used to detect fast throttle changes
     private final static long SLEEPBETWEENTHROTTLECHANGES = 1500; // This is needed for weak engines that can't handle quick throttle changes
 
     EngineHandler(DomainController dc) {
+        isChangingThrottle = false;
+        currentState = newState = IDLE;
         this.dc = dc;
         setupGPIO();
     }
@@ -35,7 +37,6 @@ class EngineHandler extends Thread {
 
     @Override
     public void run() {
-        System.out.println("EngineHandler running...");
         while (true) {
             newState = EngineState.getByName(dc.get(ENGINE));   // Get the updated engine state from the ABQ
             
