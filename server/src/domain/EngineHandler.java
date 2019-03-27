@@ -102,7 +102,7 @@ class EngineHandler implements Runnable {
                     Thread.sleep(SLEEPBETWEENTHROTTLECHANGES);
 
                 } catch (InterruptedException ex) { // This happens when the user gives other engine input while we are slowly changing it
-                    dc.clearEngineBuffer(); // We have to clear the engineBuffer so the next value will be the newly inserted user input
+                    break; // We stop changing the throttle so the next value in the buffer will be used
                 }
             }
 
@@ -121,9 +121,9 @@ class EngineHandler implements Runnable {
 
             while (currentTimestamp > prevChangeTimestamp + SLEEPBETWEENTHROTTLECHANGES) {
                 try {
-                    Thread.sleep(100);
+                    Thread.sleep(100);  // Sleep a bit to wait for the engine to get up to speed
                 } catch (InterruptedException ex) { // This happens when the user gives other engine input while we are waiting to change it
-                    dc.clearEngineBuffer(); // We have to clear the engineBuffer so the next value will be the newly inserted user input
+                    break; // We stop changing the throttle so the next value in the buffer will be used
                 }
             }
 

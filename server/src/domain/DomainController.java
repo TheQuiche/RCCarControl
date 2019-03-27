@@ -63,9 +63,6 @@ public class DomainController {
 
     void interruptEngineHandlerThread() {
         ehThread.interrupt();
-    }
-
-    void clearEngineBuffer() {
         engineBuffer.clear();
     }
 }

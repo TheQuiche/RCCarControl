@@ -50,7 +50,7 @@ class ConnectionHandler implements Runnable {
                         if (dc.isChangingThrottle()) {
                             dc.interruptEngineHandlerThread(); // If we interrupt the slowly throttle changing thread, it will pick the next value from the buffer
                         }
-                        Thread.sleep(25);   // Needed to be sure the buffer is cleared
+                        
                         dc.set(ENGINE, receivedDataString);
                         continue; // skip next if
                     }
@@ -65,8 +65,6 @@ class ConnectionHandler implements Runnable {
 
             } catch (IOException ex) {
                 System.out.println("Something went wrong while receiving a packet!");
-            } catch (InterruptedException ex) {
-                System.out.println("Error occured in ConnectionHandler -> run");
             }
         }
     }
