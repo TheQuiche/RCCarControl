@@ -1,5 +1,7 @@
 package domain;
 
+import static domain.MotorType.*;
+
 public class DomainController {
 
     private final InputHandler ih;
@@ -14,13 +16,10 @@ public class DomainController {
     public boolean setServerIP(String IP) {
         return ch.setServerIP(IP);
     }
-    
-    public void updateCurrentSteeringValue(float steeringInputValue) {
-        ih.handle("S" + steeringInputValue);    // Let the InputHandler do it's thing with the value
-    }
 
-    public void updateCurrentEngineValue(float engineInputValue) {
-        ih.handle("E" + engineInputValue);    // Let the InputHandler do it's thing with the value
+    public void updateInput(float steeringInputValue, float engineInputValue) {
+        ih.handle(ENGINE, engineInputValue);    // Let the InputHandler do it's thing with the value
+        ih.handle(STEERING, steeringInputValue);    // Let the InputHandler do it's thing with the value
     }
 
     // Methods for InputHandler

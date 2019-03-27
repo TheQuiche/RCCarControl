@@ -116,8 +116,7 @@ class InputProvider {
             }
 
             // Send the current input values to the DomainController
-            dc.updateCurrentSteeringValue(state.leftStickX);
-            dc.updateCurrentEngineValue(interpretTriggers(state.leftTrigger, state.rightTrigger));
+            dc.updateInput(state.leftStickX, interpretTriggers(state.leftTrigger, state.rightTrigger));
         }
     }
 

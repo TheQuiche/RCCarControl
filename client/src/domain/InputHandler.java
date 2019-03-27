@@ -15,46 +15,26 @@ class InputHandler {
         prev_steeringState = STRAIGHT;
     }
 
-    void handle(String input) {
-        switch (input.charAt(0)) { // Interpret what type of input it is
-            case 'S':   // Input is a steering value
-                new_steeringState = convertSteering(Float.parseFloat(input.substring(1))); // Everything after the first char is the input value
-                if (new_steeringState != prev_steeringState) {
-                    dc.sendData(new_steeringState.name().getBytes()); // Let the ConnectionHandler send the data because it's a changed value
-                    
-                    prev_steeringState = new_steeringState;
-                }
-                break;
-
-            case 'E':   // Input is an engine value
-                new_engineState = convertThrottle(Float.parseFloat(input.substring(1))); // Everything after the first char is the input value
+    void handle(MotorType motorType, float inputValue) {
+        switch (motorType) {
+            case ENGINE:
+                new_engineState = convertThrottle(inputValue); // Everything after the first char is the input value
                 if (new_engineState != prev_engineState) {
                     dc.sendData(new_engineState.name().getBytes()); // Let the ConnectionHandler send the data because it's a changed value
-                    
+
                     prev_engineState = new_engineState;
                 }
                 break;
-        }
-    }
 
-    private SteeringState convertSteering(float steeringInputValue) {
-        if (steeringInputValue < HALF_LEFT.getValue()) {
-            return FULL_LEFT;
+            case STEERING:
+                new_steeringState = convertSteering(inputValue); // Everything after the first char is the input value
+                if (new_steeringState != prev_steeringState) {
+                    dc.sendData(new_steeringState.name().getBytes()); // Let the ConnectionHandler send the data because it's a changed value
+
+                    prev_steeringState = new_steeringState;
+                }
+                break;
         }
-        if (steeringInputValue < STRAIGHT.getValue() - 0.1) { // deadzone [-0.1, 0.1]
-            return HALF_LEFT;
-        }                           
-        if (steeringInputValue < STRAIGHT.getValue() + 0.1) { // deadzone [-0.1, 0.1]
-            return STRAIGHT;
-        }
-        if (steeringInputValue < HALF_RIGHT.getValue()) {
-            return HALF_RIGHT;
-        }
-        if (steeringInputValue <= FULL_RIGHT.getValue()) {
-            return FULL_RIGHT;
-        }
-        
-        return STRAIGHT;    // In case something went wrong we'll just pick straight
     }
 
     private EngineState convertThrottle(float engineInputValue) {
@@ -79,7 +59,27 @@ class InputHandler {
         if (engineInputValue <= FULL_FORWARD.getValue()) {
             return FULL_FORWARD;
         }
-        
+
         return IDLE;    // In case something went wrong we'll just pick idle
+    }
+
+    private SteeringState convertSteering(float steeringInputValue) {
+        if (steeringInputValue < HALF_LEFT.getValue()) {
+            return FULL_LEFT;
+        }
+        if (steeringInputValue < STRAIGHT.getValue() - 0.1) { // deadzone [-0.1, 0.1]
+            return HALF_LEFT;
+        }
+        if (steeringInputValue < STRAIGHT.getValue() + 0.1) { // deadzone [-0.1, 0.1]
+            return STRAIGHT;
+        }
+        if (steeringInputValue < HALF_RIGHT.getValue()) {
+            return HALF_RIGHT;
+        }
+        if (steeringInputValue <= FULL_RIGHT.getValue()) {
+            return FULL_RIGHT;
+        }
+
+        return STRAIGHT;    // In case something went wrong we'll just pick straight
     }
 }
