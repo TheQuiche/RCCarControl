@@ -3,7 +3,7 @@ package domain;
 import static domain.MotorType.STEERING;
 import java.io.IOException;
 
-class SteeringHandler implements Runnable {
+class SteeringHandler extends Thread {
 
     private final DomainController dc;
 

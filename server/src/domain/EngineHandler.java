@@ -5,7 +5,7 @@ import static domain.EngineState.*;
 import java.io.IOException;
 import java.sql.Timestamp;
 
-class EngineHandler implements Runnable {
+class EngineHandler extends Thread {
 
     private final DomainController dc;
     private boolean isChangingThrottle = false; // This is set to true if you quickly floor the throttle (the program will then slowly accelerate, this is needed for not powerfull engines)
@@ -35,9 +35,10 @@ class EngineHandler implements Runnable {
 
     @Override
     public void run() {
+        System.out.println("EngineHandler running...");
         while (true) {
             newState = EngineState.getByName(dc.get(ENGINE));   // Get the updated engine state from the ABQ
-
+            
             if (checkAllowedSkip()) {
                 continue;   // currentState updated, no need to loop through the next if's
             }

@@ -8,21 +8,19 @@ public class DomainController {
     private final ConnectionHandler ch;
     private final EngineHandler eh;
     private final SteeringHandler sh;
-    private final Thread ehThread;
 
     public DomainController() {
         engineBuffer = new ArrayBlockingQueue<>(10);
         steeringBuffer = new ArrayBlockingQueue<>(10);
         ch = new ConnectionHandler(this);
-        ehThread = new Thread(eh = new EngineHandler(this));
+        eh = new EngineHandler(this);
         sh = new SteeringHandler(this);
-
     }
 
     public void run() {
+        eh.start();
+        sh.start();
         ch.run();
-        ehThread.start();
-        sh.run();
     }
 
     void set(MotorType motorType, String value) {
@@ -62,7 +60,7 @@ public class DomainController {
     }
 
     void interruptEngineHandlerThread() {
-        ehThread.interrupt();
+        eh.interrupt();
         engineBuffer.clear();
     }
 }

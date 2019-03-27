@@ -6,7 +6,7 @@ import java.net.DatagramPacket;
 import java.net.DatagramSocket;
 import java.net.SocketException;
 
-class ConnectionHandler implements Runnable {
+class ConnectionHandler {
 
     private final DomainController dc;
     private DatagramSocket socket;
@@ -29,7 +29,6 @@ class ConnectionHandler implements Runnable {
         }
     }
 
-    @Override
     public void run() {
         String receivedDataString;
         System.out.println("Waiting for a client to connect...");
