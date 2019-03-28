@@ -137,7 +137,8 @@ class EngineHandler extends Thread {
 
     private void handleOutput(EngineState state) {
         try {
-            Runtime.getRuntime().exec(String.format("gpio -g write 5 %d && gpio -g pwm 12 %d", state.getDirection(), state.getPower()));
+            Runtime.getRuntime().exec(new String[] { "/bin/bash", "-c",
+                String.format("gpio -g write 5 %d && gpio -g pwm 12 %d", state.getDirection(), state.getPower())});
             System.out.println("Written: " + state.name());
 
         } catch (IOException ex) {
