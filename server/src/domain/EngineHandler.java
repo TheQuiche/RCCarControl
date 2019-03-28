@@ -86,16 +86,14 @@ class EngineHandler extends Thread {
     private boolean checkThrottleSkip() {
         if (Math.abs(currentState.getValue() - newState.getValue()) > 1) {  // If the absolute value of the subtraction is larger than 1, you skipped a throttle position (see EngineState enum values)
             isChangingThrottle = true;  // We will now start slowly changing the throttle
+            currentState = EngineState.getByValue(currentState.getValue() < newState.getValue() ? currentState.getValue() + 1 : currentState.getValue() - 1);    // Update the currentState (if needed for accel/decel check)
+            checkFastChange();  // Check if the  first update of EngineState will cause a fastChange
 
             while (currentState != newState) { // As long as we aren't where the user wants it, slowly increase/decrease the throtlle
-                if (currentState.getValue() < newState.getValue()) {   // We now know we are accelerating
-                    handleOutput(currentState = EngineState.getByValue(currentState.getValue() + 1));
-                    prevChangeTimestamp = new Timestamp(System.currentTimeMillis()).getTime();  // Update the previous change timestamp
+                handleOutput(currentState
+                        = EngineState.getByValue(currentState.getValue() < newState.getValue() ? currentState.getValue() + 1 : currentState.getValue() - 1)); // Update the currentState (if needed for accel/decel check)
 
-                } else {    // We now know we are decelerating
-                    handleOutput(currentState = EngineState.getByValue(currentState.getValue() - 1));
-                    prevChangeTimestamp = new Timestamp(System.currentTimeMillis()).getTime();  // Update the previous change timestamp
-                }
+                prevChangeTimestamp = new Timestamp(System.currentTimeMillis()).getTime();  // Update the previous change timestamp
 
                 try {
                     Thread.sleep(SLEEPBETWEENTHROTTLECHANGES);
@@ -107,6 +105,7 @@ class EngineHandler extends Thread {
 
             isChangingThrottle = false; // We are done changing the throttle
             return true;
+            
         } else {
             return false;
         }
@@ -118,16 +117,19 @@ class EngineHandler extends Thread {
         if (prevChangeTimestamp + SLEEPBETWEENTHROTTLECHANGES > currentTimestamp) { // true when the last change was less than 1.5 seconds ago
             isChangingThrottle = true;
 
-            while (currentTimestamp > prevChangeTimestamp + SLEEPBETWEENTHROTTLECHANGES) {
+            while (prevChangeTimestamp + SLEEPBETWEENTHROTTLECHANGES > (currentTimestamp = new Timestamp(System.currentTimeMillis()).getTime())) {  // Check if the previous change happened more than 1.5 seconds ago & update timestamp
                 try {
                     Thread.sleep(100);  // Sleep a bit to wait for the engine to get up to speed
                 } catch (InterruptedException ex) { // This happens when the user gives other engine input while we are waiting to change it
-                    break; // We stop changing the throttle so the next value in the buffer will be used
+                    isChangingThrottle = false;
+                    return true; // We stop changing the throttle so the next value in the buffer will be used
                 }
             }
 
+            handleOutput(currentState);
             isChangingThrottle = false;
             return true;
+
         } else {
             return false;
         }
